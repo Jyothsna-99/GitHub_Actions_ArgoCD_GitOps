@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: node-app
-        image: jyothsnav/my-app:986e9413c9716dbe362cfe4909e46babfac6aba5
+        image: jyothsnav/my-app:0cdbacfaa07865fd58c62872526d737b70655564
         ports:
         - containerPort: 3000
 
