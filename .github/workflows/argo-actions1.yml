@@ -12,6 +12,8 @@ env:
     ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
     ARGOCD_USERNAME: ${{ secrets.ARGOCD_USERNAME }}
     ARGOCD_PASSWORD: ${{ secrets.ARGOCD_PASSWORD }} 
+    GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
+    GIT_EMAIL: {{ secrets.GIT_EMAIL }}"
     
 jobs:
     build:
@@ -71,6 +73,22 @@ jobs:
                     --username ${{ secrets.ARGOCD_USERNAME }} \
                     --password ${{ secrets.ARGOCD_PASSWORD }} \
                     --insecure
+
+            - name: Update deployment.yaml with newly built image
+              run: |
+                git config user.name "${{ secrets.GIT_USERNAME }}"
+                git config user.email "${{ secrets.GIT_EMAIL }}"
+                git fetch origin
+                git checkout main
+                git pull origin main
+                pwd
+                cat manifest/deployment.yaml
+                pwd
+                sed -i "s+${{ secrets.DOCKERHUB_USERNAME }}/my-app.*+${{ secrets.DOCKERHUB_USERNAME }}/my-app:${{ github.sha }}+g" manifest/deployment.yaml
+                cat manifest/deployment.yaml
+
+            
+
 
             
 
